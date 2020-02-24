@@ -3,7 +3,7 @@ const uuid = require('uuid');
 
 const Loan = require('../models/loan');
 
-const { body, validationResult } = require('express-validator');
+const { check, query, body, validationResult } = require('express-validator');
 
 let loan;
 
@@ -13,7 +13,7 @@ const initLoan = async (req, res, next) => {
 
     if (!errors.isEmpty()) {
       // TODO: reformat errors
-      res.status(422).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
       return;
     }
 
@@ -26,7 +26,7 @@ const initLoan = async (req, res, next) => {
 
     res.status(200).json({ message: 'Loan initiated successfully' });
   } catch(err) {
-    console.log('createUser: err:', err);
+    console.log('initLoan: err:', err);
     return next(err);
   }
 };
@@ -37,7 +37,7 @@ const makePayment = async (req, res, next) => {
 
     if (!errors.isEmpty()) {
       // TODO: reformat errors
-      res.status(422).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
       return;
     }
 
@@ -52,7 +52,42 @@ const makePayment = async (req, res, next) => {
 
     res.status(200).json({ message: 'Payment made successfully' });
   } catch(err) {
-    console.log('createUser: err:', err);
+    console.log('makePayment: err:', err);
+    return next(err);
+  }
+};
+
+const getBalance = async (req, res, next) => {
+  try {
+    console.log('req :', req);
+    const errors = validationResult(req);
+
+    console.log('errors :', errors);
+
+    if (!errors.isEmpty()) {
+      // TODO: reformat errors
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    if (!loan) {
+      res.status(404).json({ message: 'No loan found' });
+      return;
+    }
+
+    const reqBalance = req.query;
+
+    const { date } = reqBalance;
+    const balance = loan.getBalance(moment(date).valueOf());
+
+    console.log('balance :', balance);
+
+    res.status(200).json({
+      message: 'Balance retrieved successfully',
+      balance
+    });
+  } catch(err) {
+    console.log('getBalance: err:', err);
     return next(err);
   }
 };
@@ -62,14 +97,20 @@ const validateLoan = () => {
     body('amount').exists().isInt(),
     body('interestRate').exists().isInt(),
     body('startDate').custom(isDate)
-  ]
+  ];
 };
 
 const validatePayment = () => {
   return [
     body('amount').exists().isInt(),
     body('date').custom(isDate)
-  ]
+  ];
+};
+
+const validateBalance = () => {
+  return [
+    body('date').custom(isDate)
+  ];
 };
 
 const isDate = date => {
@@ -79,6 +120,8 @@ const isDate = date => {
 module.exports = {
   validateLoan,
   validatePayment,
+  validateBalance,
   initLoan,
-  makePayment
+  makePayment,
+  getBalance
 };

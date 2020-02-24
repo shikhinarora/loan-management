@@ -22,4 +22,10 @@ router.post(
   loanController.makePayment,
 );
 
+router.post(
+  '/loan/balance',
+  loanController.validateBalance(),
+  loanController.getBalance,
+);
+
 app.listen(3000);

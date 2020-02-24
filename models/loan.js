@@ -10,6 +10,11 @@ class Loan {
     this.interestRate = interestRate;
     this.startDate = startDate;
     this.payments = [];
+    // this.payments = [
+    //   { amount: 10, date: 1582569000000 },
+    //   { amount: 10, date: 1582655400000 },
+    //   { amount: 10, date: 1582741800000 }
+    // ]
   };
 
   makePayment(amount, date) {
@@ -20,11 +25,14 @@ class Loan {
   }
 
   getBalance(date) {
-    return this.payments.reduce((acc, curr) => {
-      if (moment(date).valueOf() > curr.date) {
-        acc += curr.amount;
+    const balance = this.payments.reduce((acc, payment) => {
+      if (date > payment.date) {
+        acc += payment.amount;
       }
+      return acc;
     }, 0);
+
+    return balance;
   }
   
 };
