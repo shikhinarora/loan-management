@@ -1,0 +1,26 @@
+{
+  "name": "loan-management",
+  "version": "1.0.0",
+  "description": "service for simulating loan process",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "moment": "^2.24.0",
+    "uuid": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@personalgit:shikhinarora/loan-management.git"
+  },
+  "author": "Shikhin Arora",
+  "license": "ISC"
+}
