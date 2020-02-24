@@ -25,12 +25,16 @@ class Loan {
   }
 
   getBalance(date) {
-    const balance = this.payments.reduce((acc, payment) => {
+    const payments = this.payments.reduce((acc, payment) => {
       if (date > payment.date) {
         acc += payment.amount;
       }
       return acc;
     }, 0);
+
+
+    // if () check if trying to get balance before initialization 
+    const interest = this.interestRate / 100 / 365 * this.amount * 
 
     return balance;
   }

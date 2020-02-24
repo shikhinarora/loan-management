@@ -3,7 +3,7 @@ const uuid = require('uuid');
 
 const Loan = require('../models/loan');
 
-const { check, query, body, validationResult } = require('express-validator');
+const { query, body, validationResult } = require('express-validator');
 
 let loan;
 
@@ -25,6 +25,7 @@ const initLoan = async (req, res, next) => {
     console.log('loan :', loan);
 
     res.status(200).json({ message: 'Loan initiated successfully' });
+    return;
   } catch(err) {
     console.log('initLoan: err:', err);
     return next(err);
@@ -41,7 +42,10 @@ const makePayment = async (req, res, next) => {
       return;
     }
 
-    if (!loan) res.status(404).json({ message: 'No loan found' });
+    if (!loan) {
+      res.status(404).json({ message: 'No loan found' });
+      return;
+    }
 
     const reqPayment = req.body;
 
@@ -51,6 +55,7 @@ const makePayment = async (req, res, next) => {
     console.log('loan :', loan.payments);
 
     res.status(200).json({ message: 'Payment made successfully' });
+    return;
   } catch(err) {
     console.log('makePayment: err:', err);
     return next(err);
@@ -86,6 +91,7 @@ const getBalance = async (req, res, next) => {
       message: 'Balance retrieved successfully',
       balance
     });
+    return;
   } catch(err) {
     console.log('getBalance: err:', err);
     return next(err);
@@ -96,20 +102,20 @@ const validateLoan = () => {
   return [
     body('amount').exists().isInt(),
     body('interestRate').exists().isInt(),
-    body('startDate').custom(isDate)
+    body('startDate').exists().custom(isDate)
   ];
 };
 
 const validatePayment = () => {
   return [
     body('amount').exists().isInt(),
-    body('date').custom(isDate)
+    body('date').exists().custom(isDate)
   ];
 };
 
 const validateBalance = () => {
   return [
-    body('date').custom(isDate)
+    query('date').exists().custom(isDate)
   ];
 };
 
