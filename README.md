@@ -16,3 +16,9 @@
 * Currently only accepting whole numbers for loan amount and payment
 
 ## How to run
+
+* Clone the repo
+* Run `npm i`
+* run `npm start`
+* Download postman requests `postman.json` from the repo and import in postman
+* Always loan money on low interet rates ;)
