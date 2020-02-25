@@ -7,7 +7,7 @@
 
 * Clone the repo
 * Run `npm i`
-* run `npm start`
+* Run `npm start`
 * Download postman requests `postman.json` from the repo and import in postman
 * Always lend loans on low interet rates ;)
 
