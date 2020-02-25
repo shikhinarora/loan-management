@@ -22,7 +22,7 @@ class Loan {
   }
 
   getPayments(date) {
-    return this.payments.filter(payment => date > payment.date);
+    return this.payments.filter(payment => date >= payment.date && payment.date >= this.startDate);
   }
 
   calculateInterest (currentDate) {
@@ -31,8 +31,8 @@ class Loan {
   
     let interest;
     if (days >= 0) {
-      const interestPerDay = this.interestRate / 100 / 365;
-      interest = interestPerDay * this.amount * days;
+      const interestPerDay = this.interestRate / 100 / 365 * this.amount;
+      interest = interestPerDay * days;
     } else {
       interest = 0;
     }
@@ -42,6 +42,8 @@ class Loan {
   }
 
   getBalance(date) {
+    if (date < this.startDate) return 0;
+
     const interest = this.calculateInterest(date);
     const payments = this.getPayments(date);
     const totalPayment = payments.reduce((acc, payment) => {
