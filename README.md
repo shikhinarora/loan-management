@@ -1,6 +1,6 @@
 # Loan Management
 
-* Using Node JS for creating API
+* Using Node JS + Express for creating API
 * Buiding for REST
 
 ## Gotchas
