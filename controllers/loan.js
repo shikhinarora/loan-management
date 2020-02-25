@@ -2,7 +2,6 @@ const moment = require('moment');
 const uuid = require('uuid');
 
 const Loan = require('../models/loan');
-const { calculateInterest } = require('../helpers/util');
 
 const { query, body, validationResult } = require('express-validator');
 
@@ -19,11 +18,10 @@ const initLoan = async (req, res, next) => {
     }
 
     const reqLoan = req.body;
-
     const { amount, interestRate, startDate } = reqLoan;
-    loan = new Loan(uuid.v4(), amount, interestRate, moment(startDate).valueOf());
 
-    console.log('loan :', loan);
+    loan = new Loan(uuid.v4(), amount, interestRate, moment(startDate).valueOf());
+    console.log('loan:', loan);
 
     res.status(200).json({ message: 'Loan initiated successfully' });
     return;
@@ -49,11 +47,10 @@ const makePayment = async (req, res, next) => {
     }
 
     const reqPayment = req.body;
-
     const { amount, date } = reqPayment;
-    loan.makePayment(amount, moment(date).valueOf());
 
-    console.log('loan :', loan.payments);
+    loan.makePayment(amount, moment(date).valueOf());
+    console.log('all payments:', loan.payments);
 
     res.status(200).json({ message: 'Payment made successfully' });
     return;
@@ -76,28 +73,18 @@ const getBalance = async (req, res, next) => {
     if (!loan) {
       // res.status(404).json({ message: 'No loan found' });
       // return;
-      loan = new Loan(uuid.v4(), 1000, 10, moment('2020-02-24').valueOf());
+      loan = new Loan(uuid.v4(), 1000, 365, moment('2020-02-24').valueOf());
     }
 
     const reqBalance = req.query;
-
     const { date } = reqBalance;
-
-    const balance = 0;
-    const payments = loan.getPayments(moment(date).valueOf());
-
-    console.log('payments :', payments);
-
-    const interest = calculateInterest(loan, moment(date).valueOf());
-
-    console.log('balance :', interest);
-    // const balance = loan.getBalance(moment(date).valueOf());
-
-    // console.log('balance :', balance);
+    
+    let balance = loan.getBalance(moment(date).valueOf());
+    console.log('balance :', balance);
 
     res.status(200).json({
       message: 'Balance retrieved successfully',
-      balance: interest
+      balance
     });
     return;
   } catch(err) {
@@ -108,15 +95,15 @@ const getBalance = async (req, res, next) => {
 
 const validateLoan = () => {
   return [
-    body('amount').exists().isInt(),
-    body('interestRate').exists().isInt(),
+    body('amount').exists().isInt({ min: 1 }),
+    body('interestRate').exists().isInt({ min: 1 }),
     body('startDate').exists().custom(isDate)
   ];
 };
 
 const validatePayment = () => {
   return [
-    body('amount').exists().isInt(),
+    body('amount').exists().isInt({ min: 1 }),
     body('date').exists().custom(isDate)
   ];
 };

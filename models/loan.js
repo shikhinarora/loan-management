@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 class Loan {
   constructor (
     id,
@@ -15,7 +17,7 @@ class Loan {
     this.payments = [
       { amount: 10, date: 1582569000000 },
       { amount: 10, date: 1582655400000 },
-      { amount: 10, date: 1582741800000 }
+      { amount: 100, date: 1582741800000 }
     ]
   };
 
@@ -27,37 +29,37 @@ class Loan {
   }
 
   getPayments(date) {
-    const payments = this.payments.filter(payment => date > payment.date);
-
-    console.log('payments :', payments);
-
-    return payments;
+    return this.payments.filter(payment => date > payment.date);
   }
 
-  getBalance(date) {
-    const payments = this.payments.reduce((acc, payment) => {
-      if (date > payment.date) {
-        acc += payment.amount;
-      }
-      return acc;
-    }, 0);
-
-
-    // if () check if trying to get balance before initialization 
-    const days = date.diff(this.startDate, 'days');
-
+  calculateInterest (currentDate) {
+    const days = moment(currentDate).diff(moment(this.startDate), 'days');
+    console.log('days :', days);
+  
     let interest;
-    if (days > 0) {
-      interest = this.interestRate / 100 / 365 * this.amount * days;
+    if (days >= 0) {
+      const interestPerDay = this.interestRate / 100 / 365;
+      interest = interestPerDay * this.amount * days;
     } else {
       interest = 0;
     }
-
     console.log('interest :', interest);
+  
+    return interest;
+  }
 
+  getBalance(date) {
+    const interest = this.calculateInterest(date);
+    const payments = this.getPayments(date);
+    const totalPayment = payments.reduce((acc, payment) => {
+      acc += payment.amount;
+      return acc;
+    }, 0);
+
+    const balance = this.amount + interest - totalPayment;
+    console.log('balance :', balance);
     return balance;
   }
-  
 };
 
 module.exports = Loan
