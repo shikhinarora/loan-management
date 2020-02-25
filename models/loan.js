@@ -10,11 +10,13 @@ class Loan {
     this.interestRate = interestRate;
     this.startDate = startDate;
     this.payments = [];
-    // this.payments = [
-    //   { amount: 10, date: 1582569000000 },
-    //   { amount: 10, date: 1582655400000 },
-    //   { amount: 10, date: 1582741800000 }
-    // ]
+
+    // TODO: Remove
+    this.payments = [
+      { amount: 10, date: 1582569000000 },
+      { amount: 10, date: 1582655400000 },
+      { amount: 10, date: 1582741800000 }
+    ]
   };
 
   makePayment(amount, date) {
@@ -22,6 +24,14 @@ class Loan {
       amount,
       date
     });
+  }
+
+  getPayments(date) {
+    const payments = this.payments.filter(payment => date > payment.date);
+
+    console.log('payments :', payments);
+
+    return payments;
   }
 
   getBalance(date) {
@@ -34,7 +44,16 @@ class Loan {
 
 
     // if () check if trying to get balance before initialization 
-    const interest = this.interestRate / 100 / 365 * this.amount * 
+    const days = date.diff(this.startDate, 'days');
+
+    let interest;
+    if (days > 0) {
+      interest = this.interestRate / 100 / 365 * this.amount * days;
+    } else {
+      interest = 0;
+    }
+
+    console.log('interest :', interest);
 
     return balance;
   }

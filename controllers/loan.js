@@ -2,6 +2,7 @@ const moment = require('moment');
 const uuid = require('uuid');
 
 const Loan = require('../models/loan');
+const { calculateInterest } = require('../helpers/util');
 
 const { query, body, validationResult } = require('express-validator');
 
@@ -64,10 +65,7 @@ const makePayment = async (req, res, next) => {
 
 const getBalance = async (req, res, next) => {
   try {
-    console.log('req :', req);
     const errors = validationResult(req);
-
-    console.log('errors :', errors);
 
     if (!errors.isEmpty()) {
       // TODO: reformat errors
@@ -76,20 +74,30 @@ const getBalance = async (req, res, next) => {
     }
 
     if (!loan) {
-      res.status(404).json({ message: 'No loan found' });
-      return;
+      // res.status(404).json({ message: 'No loan found' });
+      // return;
+      loan = new Loan(uuid.v4(), 1000, 10, moment('2020-02-24').valueOf());
     }
 
     const reqBalance = req.query;
 
     const { date } = reqBalance;
-    const balance = loan.getBalance(moment(date).valueOf());
 
-    console.log('balance :', balance);
+    const balance = 0;
+    const payments = loan.getPayments(moment(date).valueOf());
+
+    console.log('payments :', payments);
+
+    const interest = calculateInterest(loan, moment(date).valueOf());
+
+    console.log('balance :', interest);
+    // const balance = loan.getBalance(moment(date).valueOf());
+
+    // console.log('balance :', balance);
 
     res.status(200).json({
       message: 'Balance retrieved successfully',
-      balance
+      balance: interest
     });
     return;
   } catch(err) {
