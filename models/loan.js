@@ -12,13 +12,6 @@ class Loan {
     this.interestRate = interestRate;
     this.startDate = startDate;
     this.payments = [];
-
-    // TODO: Remove
-    this.payments = [
-      { amount: 10, date: 1582569000000 },
-      { amount: 10, date: 1582655400000 },
-      { amount: 100, date: 1582741800000 }
-    ]
   };
 
   makePayment(amount, date) {

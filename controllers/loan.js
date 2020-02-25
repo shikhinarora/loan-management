@@ -71,9 +71,8 @@ const getBalance = async (req, res, next) => {
     }
 
     if (!loan) {
-      // res.status(404).json({ message: 'No loan found' });
-      // return;
-      loan = new Loan(uuid.v4(), 1000, 365, moment('2020-02-24').valueOf());
+      res.status(404).json({ message: 'No loan found' });
+      return;
     }
 
     const reqBalance = req.query;

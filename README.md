@@ -6,6 +6,7 @@
 ## Gotchas
 
 * Loan instance will clear when server restarts or when a new loan in initiated
+* User can start repaying the loan from the date of initiation
 * Fetching balance will not include payments made at the same exact time
 * If any date does not includes time, then time will default to 00:00:00
 * Balance before the date of initiation of loan will be 0 as loan has not been taken
