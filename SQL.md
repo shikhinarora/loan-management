@@ -2,10 +2,10 @@
 
 Here are the three queries as requested
 
-1. Which person has the greatest total expense amount?
+* Which person has the greatest total expense amount?
 
 ```SQL  
-SELECT per.name, expns.sum_amount AS total
+SELECT per.name AS total
 FROM persons AS per
 LEFT JOIN (
   SELECT person_id, SUM(amount) AS sum_amount
@@ -16,7 +16,7 @@ ORDER BY expns.sum_amount DESC NULLS LAST
 LIMIT 1
 ```
 
-2. Which person has the greatest total end balance considering all incomes and expenses?
+* Which person has the greatest total end balance considering all incomes and expenses?
 
 ```SQL
 SELECT per.name
@@ -35,7 +35,7 @@ ORDER BY (incms.sum_amount - expns.sum_amount) DESC NULLS LAST
 LIMIT 1
 ```
 
-3. List the name, date and balance of the three persons with the highest peak balances, i.e. the day when all incomes and expenses up to that day gives the highest balance.
+* List the name, date and balance of the three persons with the highest peak balances, i.e. the day when all incomes and expenses up to that day gives the highest balance.
 
 ```SQL
 SELECT persons.name, topThree.date, topThree.runningMax FROM
